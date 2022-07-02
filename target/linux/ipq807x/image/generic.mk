@@ -112,3 +112,19 @@ define Device/xiaomi_ax9000
 	kmod-ath10k-ct ath10k-firmware-qca9887-ct
 endef
 TARGET_DEVICES += xiaomi_ax9000
+
+define Device/netgear_rax120v2
+	$(call Device/FitImage)
+	$(call Device/UbiFit)
+	DEVICE_VENDOR := Netgear
+	DEVICE_MODEL := RAX120v2
+	BLOCKSIZE := 128k
+	DEVICE_DTS_CONFIG := config@hk01
+	SOC := ipq8074
+	KERNEL_SIZE := 29696k
+	NETGEAR_BOARD_ID := RAX120
+	NETGEAR_HW_ID="29765589+0+512+1024+4x4+8x8"
+	IMAGE/nand-factory.ubi := append-kernel | pad-to $$$$(KERNEL_SIZE) | append-rootfs | pad-rootfs | netgear-dni
+	DEVICE_PACKAGES := ipq-wifi-netgear_rax120v2 kmod-spi-gpio kmod-spi-bitbang kmod-gpio-nxp-74hc164 kmod-hwmon-g762
+endef
+TARGET_DEVICES += netgear_rax120v2
