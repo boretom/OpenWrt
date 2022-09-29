@@ -38,7 +38,8 @@ platform_do_upgrade() {
 	xiaomi,redmi-router-ax6s)
 		nand_do_upgrade "$1"
 		;;
-	linksys,e8450-ubi)
+	linksys,e8450-ubi|\
+	netgear,wax206)
 		CI_KERNPART="fit"
 		nand_do_upgrade "$1"
 		;;
