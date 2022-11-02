@@ -422,6 +422,9 @@
 	[    1.870064] 0x0000062c0000-0x0000063c0000 : "NTGRcryptK"
 	[    1.877258] 0x0000063c0000-0x0000068c0000 : "NTGRcryptD"
 	[    1.890005] 0x0000068c0000-0x0000069c0000 : "LOG"
+	[    1.902786] mtdoops: ready 0, 1 (no erase)
+	[    1.906880] mtdoops: Attached to MTD device 19
+	[    1.911668] 0x0000069c0000-0x000007000000 : "User_data"
 	*/
 			partition@0 {
 				label = "Preloader";
@@ -432,24 +435,28 @@
 			partition@80000 {
 				label = "ATF";
 				reg = <0x80000 0x0040000>;
+				read-only;
 			};
 
 			partition@c0000 {
-				label = "u-boot";
+				label = "Bootloader";
 				reg = <0xc0000 0x0080000>;
+				read-only;
 			};
 
 			partition@140000 {
-				label = "u-boot-env";
+				label = "Config";
 				reg = <0x140000 0x0080000>;
+				read-only;
 			};
 
 			factory: partition@1c0000 {
 				compatible = "nvmem-cells";
-				label = "factory";
+				label = "Factory";
 				reg = <0x1c0000 0x0100000>;
 				#address-cells = <1>;
 				#size-cells = <1>;
+				read-only;
 
 				macaddr_factory_7fff4: macaddr@7fff4 {
 					reg = <0x7fff4 0x6>;
@@ -460,44 +467,91 @@
 				};
 			};
 
-			partition@300000 {
-				label = "devinfo";
-				reg = <0x300000 0x020000>;
+			partition@2c0000 {
+				label = "firmware";
+				reg = <0x2c0000 0x2600000>;
+
+				compatible = "fixed-partitions";
+				#address-cells = <1>;
+				#size-cells = <1>;
+
+				partition@0 {
+					label = "kernel";
+					reg = <0x0 0x400000>;
+				};
+
+				partition@400000 {
+					label = "ubi";
+					reg = <0x600000 0x2200000>;
+				};
 			};
 
-			partition@320000 {
-				label = "senv";
-				reg = <0x320000 0x020000>;
+			partition@28c0000 {
+				label = "firmware_backup";
+				reg = <0x28c0000 0x2600000>;
+				read-only;
 			};
 
-			partition@360000 {
-				label = "bootseq";
-				reg = <0x360000 0x020000>;
+			partition@4ec0000 {
+				label = "CFG";
+				reg = <0x4ec0000 0x800000>;
+				read-only;
 			};
 
-			partition@500000 {
-				label = "firmware1";
-				compatible = "denx,fit";
-				openwrt,cmdline-match = "mtdparts=master";
-				reg = <0x500000 0x1E00000>;
+			partition@56c0000 {
+				label = "RAE";
+				reg = <0x56c0000 0x400000>;
+				read-only;
 			};
 
-			partition@2300000 {
-				label = "firmware2";
-				compatible = "denx,fit";
-				openwrt,cmdline-match = "mtdparts=slave";
-				reg = <0x2300000 0x1E00000>;
+			partition@5ac0000 {
+				label = "POT";
+				reg = <0x5ac0000 0x100000>;
+				read-only;
 			};
 
-			partition@4100000 {
-				label = "data";
-				reg = <0x4100000 0x1900000>;
+			partition@5bc0000 {
+				label = "Language";
+				reg = <0x5bc0000 0x400000>;
+				read-only;
 			};
 
-			partition@5100000 {
-				label = "mfg";
-				reg = <0x5a00000 0x1400000>;
+			partition@5fc0000 {
+				label = "Traffic";
+				reg = <0x5fc0000 0x200000>;
+				read-only;
 			};
+
+			partition@61c0000 {
+				label = "Cert";
+				reg = <0x61c0000 0x100000>;
+				read-only;
+			};
+
+			partition@62c0000 {
+				label = "NTGRcryptK";
+				reg = <0x62c0000 0x100000>;
+				read-only;
+			};
+
+			partition@63c0000 {
+				label = "NTGRcryptD";
+				reg = <0x63c0000 0x500000>;
+				read-only;
+			};
+
+			partition@68c0000 {
+				label = "LOG";
+				reg = <0x68c0000 0x100000>;
+				read-only;
+			};
+
+			partition@69c0000 {
+				label = "User_data";
+				reg = <0x69c0000 0x640000>;
+				read-only;
+			};
+
 		};
 	};
 };
