@@ -250,6 +250,10 @@ define Device/netgear_wax206
 #  IMAGE_SIZE := 32768k
   KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb | \
 	append-squashfs4-fakeroot
+# recovery can also be used with stock firmware web-ui, hence the padding...
+  KERNEL_INITRAMFS := kernel-bin | lzma | \
+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 128k
+  KERNEL_INITRAMFS_SUFFIX := -recovery.itb
   IMAGES += factory.img
   IMAGE/factory.img := append-kernel | pad-to $$(KERNEL_SIZE) | \
 	append-ubi | check-size | netgear-encrypted-factory
