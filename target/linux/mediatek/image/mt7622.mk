@@ -248,8 +248,7 @@ define Device/netgear_wax206
 #  set by sumo
 #  KERNEL_SIZE := 6144k
 #  IMAGE_SIZE := 32768k
-  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb | \
-	append-squashfs4-fakeroot
+  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
 # recovery can also be used with stock firmware web-ui, hence the padding...
   KERNEL_INITRAMFS := kernel-bin | lzma | \
 	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 128k

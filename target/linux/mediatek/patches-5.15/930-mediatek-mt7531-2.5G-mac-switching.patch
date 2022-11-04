@@ -1,0 +1,49 @@
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -2555,18 +2555,36 @@ static int mt7531_rgmii_setup(struct mt7
+ 	return 0;
+ }
+ 
++static int
++mt7531_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
++		  phy_interface_t interface);
++
+ static void mt7531_pcs_link_up(struct phylink_pcs *pcs, unsigned int mode,
+ 			       phy_interface_t interface, int speed, int duplex)
+ {
+ 	struct mt7530_priv *priv = pcs_to_mt753x_pcs(pcs)->priv;
+ 	int port = pcs_to_mt753x_pcs(pcs)->port;
+ 	unsigned int val;
++	int ret;
+ 
+ 	/* For adjusting speed and duplex of SGMII force mode. */
+ 	if (interface != PHY_INTERFACE_MODE_SGMII ||
+ 	    phylink_autoneg_inband(mode))
+ 		return;
+ 
++	printk(KERN_INFO, "[%s] port %d, interface %d, mode %d\n", __FUNCTION__,
++		port, interface, mode);
++
++	/* For 2.5G link MAC has to switch from SGMII to 2500BASEX */
++	if (speed == SPEED_2500) {
++		ret = mt7531_mac_config(priv->ds, port, MLO_AN_FIXED,
++			PHY_INTERFACE_MODE_2500BASEX);
++		/* TODO: too simple and what if something goes wrong */
++		mt7530_write(priv, MT7530_PMCR_P(port),
++			PMCR_CPU_PORT_SETTING(priv->id));
++		return;
++	}
++
+ 	/* SGMII force mode setting */
+ 	val = mt7530_read(priv, MT7531_SGMII_MODE(port));
+ 	val &= ~MT7531_SGMII_IF_MODE_MASK;
+@@ -2593,6 +2611,9 @@ static void mt7531_pcs_link_up(struct ph
+ 	    duplex != DUPLEX_FULL)
+ 		val |= MT7531_SGMII_FORCE_HALF_DUPLEX;
+ 
++	/* TODO: too simple and what if something goes wrong */
++	ret = mt7531_mac_config(priv->ds, port, mode, interface);
++
+ 	mt7530_write(priv, MT7531_SGMII_MODE(port), val);
+ }
+ 
