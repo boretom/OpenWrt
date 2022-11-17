@@ -253,7 +253,7 @@
 			phy_address = <4>;
 		};
 		port@6 {
-			port_id = <7>;
+			port_id = <6>;
 			phy_address = <7>;
 			compatible = "ethernet-phy-ieee802.3-c45";
 			ethernet-phy-ieee802.3-c45;
