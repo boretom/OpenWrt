@@ -251,9 +251,7 @@ define Device/netgear_wax206
   IMAGES += factory.img
   IMAGE/factory.img := append-kernel | pad-to $$(KERNEL_SIZE) | \
 	append-ubi | check-size | netgear-encrypted-factory
-  IMAGE/sysupgrade.bin := append-kernel | \
-	fit gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-static-with-rootfs | \
-	append-metadata
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 endef
 TARGET_DEVICES += netgear_wax206
 

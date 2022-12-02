@@ -34,12 +34,12 @@ platform_do_upgrade() {
 		;;
 	elecom,wrc-x3200gst3|\
 	mediatek,mt7622-rfb1-ubi|\
+	netgear,wax206|\
 	totolink,a8000ru|\
 	xiaomi,redmi-router-ax6s)
 		nand_do_upgrade "$1"
 		;;
-	linksys,e8450-ubi|\
-	netgear,wax206)
+	linksys,e8450-ubi)
 		CI_KERNPART="fit"
 		nand_do_upgrade "$1"
 		;;
@@ -74,6 +74,9 @@ platform_check_image() {
 	totolink,a8000ru|\
 	xiaomi,redmi-router-ax6s)
 		nand_do_platform_check "$board" "$1"
+		;;
+	netgear,wax206)
+		nand_do_platform_check "${board//,/_}" "$1"
 		;;
 	*)
 		[ "$magic" != "d00dfeed" ] && {
